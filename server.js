@@ -444,15 +444,15 @@ app.use((req, res, next) => {
   const reqPath = req.path.toLowerCase();
 
   if (isCrimX) {
-    if (reqPath === '/' || reqPath === '/dashboard' || reqPath === '/dashboard/' || reqPath === '/dashboard/index.html') {
-      return res.sendFile(path.join(__dirname, 'dashboard', 'index.html'));
+    if (reqPath === '/' || reqPath === '/dashboard' || reqPath === '/dashboard/' || reqPath === '/dashboard/index.html' || reqPath === '/login' || reqPath === '/signin') {
+      return res.sendFile(path.join(__dirname, 'index.html'));
     }
     return next();
   }
 
-  // Normal website also has sign in: serve dashboard/index.html on /dashboard, /login, and /signin
+  // Normal website also has sign in: serve index.html on /dashboard, /login, and /signin
   if (reqPath === '/dashboard' || reqPath === '/dashboard/' || reqPath === '/dashboard/index.html' || reqPath === '/login' || reqPath === '/signin') {
-    return res.sendFile(path.join(__dirname, 'dashboard', 'index.html'));
+    return res.sendFile(path.join(__dirname, 'index.html'));
   }
 
   next();
@@ -467,10 +467,6 @@ app.use(express.static(__dirname, {
 
 // ─── 6. DYNAMIC CLEAN URL ROUTING ───
 app.get('/', (req, res) => {
-  const host = (req.headers.host || '').toLowerCase();
-  if (host.startsWith('crimx.') || host.startsWith('crimx-')) {
-    return res.sendFile(path.join(__dirname, 'dashboard', 'index.html'));
-  }
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
@@ -520,7 +516,7 @@ app.get(['/teapot', '/418'], (req, res) => {
 
 // ─── 6. REAL HTTP 404 NOT FOUND HANDLER ───
 app.use((req, res) => {
-  res.status(404).sendFile(path.join(__dirname, '404.html'));
+  res.status(404).send(renderErrorHTML(404));
 });
 
 // ─── 7. REAL HTTP 500 INTERNAL SERVER ERROR HANDLER ───
