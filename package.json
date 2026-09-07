@@ -1,0 +1,23 @@
+{
+  "name": "crimx-app",
+  "version": "1.0.0",
+  "description": "CrimX - Dedicated Player Identity and Dashboard System for CrimsonFlame",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "crimx",
+    "crimsonflame",
+    "authentication",
+    "dashboard",
+    "cloud-run"
+  ],
+  "author": "CrimsonFlame",
+  "license": "MIT",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.19.2"
+  }
+}
