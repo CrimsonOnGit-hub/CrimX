@@ -514,6 +514,10 @@ app.get('/privacy', (req, res) => {
   res.sendFile(path.join(__dirname, 'privacy', 'index.html'));
 });
 
+app.get(['/teapot', '/418'], (req, res) => {
+  res.status(418).sendFile(path.join(__dirname, 'teapot', 'index.html'));
+});
+
 // ─── 6. REAL HTTP 404 NOT FOUND HANDLER ───
 app.use((req, res) => {
   res.status(404).sendFile(path.join(__dirname, '404.html'));
