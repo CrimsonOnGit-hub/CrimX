@@ -91,7 +91,7 @@ const HTTP_STATUS_MAP = {
 };
 
 // ─── CRIMSONFLAME THEMED ERROR RENDERER ───
-function renderErrorHTML(statusCode, customTitle, customDesc, customIcon) {
+function renderErrorHTML(statusCode, customTitle, customDesc, customIcon, showBackButton = true) {
   const info = HTTP_STATUS_MAP[statusCode] || {
     title: `${statusCode}`,
     icon: "⚠️",
@@ -224,9 +224,9 @@ function renderErrorHTML(statusCode, customTitle, customDesc, customIcon) {
             ${showIcon ? `<div class="error-icon-indicator">${icon}</div>` : ''}
             <div class="error-code-badge">${codeDisplay}</div>
             <p class="error-desc">${desc}</p>
-            <div class="error-actions">
+            ${showBackButton && statusCode !== 418 ? `<div class="error-actions">
                 <a href="/index.html" class="btn-back">Back</a>
-            </div>
+            </div>` : ''}
         </div>
     </main>
 
@@ -511,7 +511,8 @@ app.get('/privacy', (req, res) => {
 });
 
 app.get(['/teapot', '/418'], (req, res) => {
-  res.status(418).sendFile(path.join(__dirname, 'teapot', 'index.html'));
+  const info = HTTP_STATUS_MAP[418];
+  res.status(418).send(renderErrorHTML(418, info.title, info.desc, info.icon, false));
 });
 
 // ─── 6. REAL HTTP 404 NOT FOUND HANDLER ───
