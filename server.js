@@ -1,12 +1,19 @@
 const express = require('express');
 const path = require('path');
-const compression = require('compression');
+let compression;
+try {
+  compression = require('compression');
+} catch (e) {
+  // Compression module optional
+}
 const cors = require('cors');
 
 const app = express();
 const PORT = process.env.PORT || 8085;
 
-app.use(compression());
+if (compression) {
+  app.use(compression());
+}
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -519,7 +526,7 @@ app.use((err, req, res, next) => {
   res.status(500).send(renderErrorHTML(500, info.title, info.desc, info.icon));
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`[CrimsonFlame Dynamic Server] Running live on port ${PORT}`);
   console.log(`- Status test route: http://localhost:${PORT}/status/403`);
   console.log(`- Protected route:   http://localhost:${PORT}/secret-folder`);
