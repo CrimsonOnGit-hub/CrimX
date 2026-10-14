@@ -1,0 +1,821 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign into CrimX</title>
+    <script src="/theme.js"></script>
+    <link rel="stylesheet" href="/style.css?v=7">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Outfit:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-dark: #0a0a0c;
+            --surface: #141118;
+            --glass-panel: rgba(20, 17, 24, 0.92);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --crimson: #d90429;
+            --flame: #ff6b35;
+            --accent-green: #2ecc71;
+            --text-light: #fbfbfc;
+            --text-muted: #94a3b8;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-dark);
+            background-image: radial-gradient(circle at 50% 30%, rgba(217, 4, 41, 0.18) 0%, transparent 65%);
+            color: var(--text-light);
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 36px;
+            border-bottom: 1px solid var(--glass-border);
+            backdrop-filter: blur(14px);
+        }
+
+        .nav-logo {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-logo span { color: var(--crimson); }
+        .nav-badge {
+            font-size: 0.72rem;
+            background: rgba(217, 4, 41, 0.2);
+            color: #ff8597;
+            border: 1px solid rgba(217, 4, 41, 0.4);
+            padding: 2px 8px;
+            border-radius: 999px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            margin-left: 20px;
+            font-size: 0.9rem;
+            transition: color 0.2s ease;
+        }
+
+        .nav-links a:hover { color: #fff; }
+
+        .link-viewport {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .link-card {
+            background: var(--glass-panel);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 490px;
+            padding: 38px 32px;
+            box-shadow: 0 24px 60px rgba(0, 0, 0, 0.8), 0 0 35px rgba(217, 4, 41, 0.22);
+            backdrop-filter: blur(20px);
+            text-align: center;
+            opacity: 0;
+            transform: scale(0.95);
+            transition: opacity 0.4s ease, transform 0.4s ease;
+        }
+
+        .link-avatars {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .avatar-box {
+            width: 66px;
+            height: 66px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .avatar-crimson {
+            background: linear-gradient(135deg, #1f1116, #2d0e16);
+            border: 1px solid rgba(217, 4, 41, 0.4);
+        }
+
+        .avatar-target {
+            background: linear-gradient(135deg, #1a162b, #2b1f45);
+            border: 1px solid rgba(139, 92, 246, 0.4);
+        }
+
+        .link-connection-arrow {
+            font-size: 1.4rem;
+            color: var(--flame);
+            animation: pulseArrow 1.5s infinite ease-in-out;
+        }
+
+        @keyframes pulseArrow {
+            0%, 100% { opacity: 0.5; transform: translateX(0); }
+            50% { opacity: 1; transform: translateX(4px); }
+        }
+
+        .link-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.65rem;
+            font-weight: 800;
+            color: #fff;
+            margin-bottom: 8px;
+            line-height: 1.3;
+        }
+
+        .link-subtitle {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 24px;
+        }
+
+        .permissions-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 16px 18px;
+            margin-bottom: 22px;
+            text-align: left;
+        }
+
+        .permissions-title {
+            font-size: 0.74rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .permission-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.86rem;
+            color: #f1f5f9;
+            margin-bottom: 8px;
+        }
+
+        .permission-item:last-child { margin-bottom: 0; }
+        .perm-icon { color: var(--accent-green); font-size: 0.95rem; font-weight: 900; }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .btn-authorize {
+            flex: 1;
+            background: linear-gradient(135deg, var(--crimson), var(--flame));
+            border: none;
+            color: #fff;
+            font-size: 0.95rem;
+            font-weight: 700;
+            padding: 14px;
+            border-radius: 14px;
+            cursor: pointer;
+            box-shadow: 0 4px 18px rgba(217, 4, 41, 0.4);
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-authorize:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 26px rgba(217, 4, 41, 0.6);
+        }
+
+        .btn-authorize:disabled {
+            cursor: not-allowed;
+            opacity: 0.5;
+        }
+
+        .btn-cancel {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid var(--glass-border);
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            font-weight: 600;
+            padding: 14px 20px;
+            border-radius: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .btn-cancel:hover {
+            background: rgba(255, 255, 255, 0.12);
+            color: #fff;
+        }
+
+        .btn-google {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255,255,255,0.08);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            transition: background 0.2s;
+        }
+
+        .btn-google:hover { background: rgba(255,255,255,0.15); }
+
+        .profile-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            background: rgba(46,204,113,0.08);
+            border: 1px solid rgba(46,204,113,0.3);
+            padding: 10px 14px;
+            border-radius: 12px;
+            text-align: left;
+        }
+
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .success-banner {
+            display: none;
+            background: rgba(46, 204, 113, 0.15);
+            border: 1px solid var(--accent-green);
+            color: #4ade80;
+            padding: 14px;
+            border-radius: 14px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-top: 16px;
+        }
+
+        /* Error alert box */
+        .security-alert {
+            background: rgba(239, 68, 68, 0.12);
+            border: 1px solid rgba(239, 68, 68, 0.4);
+            border-radius: 14px;
+            padding: 16px;
+            margin-bottom: 20px;
+            text-align: left;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Global Custom Crimson Loading Animation -->
+    <div id="page-loader">
+        <img src="/assets/loading.gif" alt="Loading..." class="loader-video">
+        <div class="loader-title">CrimX Auth</div>
+    </div>
+
+    <nav>
+        <div class="nav-logo">
+            CrimX<span> Auth</span>
+            <span class="nav-badge">Secure SSO</span>
+        </div>
+        <div class="nav-links">
+            <a href="/index.html">← Hub</a>
+            <a href="/dashboard">Dashboard</a>
+            <a href="/developer">Developer</a>
+        </div>
+    </nav>
+
+    <main class="link-viewport">
+        <div class="link-card">
+            <!-- App Avatars -->
+            <div class="link-avatars">
+                <div class="avatar-box avatar-crimson">
+                    <img src="https://i.ibb.co/TBkJR2Jn/unnamed-removebg-preview.png" alt="CrimX" style="width: 44px; height: 44px; object-fit: contain;">
+                </div>
+                <div class="link-connection-arrow">➔</div>
+                <div id="service-avatar" class="avatar-box avatar-target">
+                    <img id="service-logo" src="https://i.ibb.co/TBkJR2Jn/unnamed-removebg-preview.png" alt="App" style="width: 44px; height: 44px; object-fit: contain; border-radius: 8px;">
+                </div>
+            </div>
+
+            <!-- Security Alert Box (Shown on Gatekeeper Fail) -->
+            <div id="gatekeeper-alert" class="security-alert">
+                <div style="font-weight: 700; color: #f87171; font-size: 0.92rem; margin-bottom: 4px;" id="gatekeeper-title">Security Alert</div>
+                <div style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.4;" id="gatekeeper-msg"></div>
+            </div>
+
+            <!-- Dynamic Heading -->
+            <h1 id="link-header-title" class="link-title">Sign into CrimX</h1>
+            <p id="link-header-subtitle" class="link-subtitle">
+                <strong id="service-name-text">This application</strong> is requesting for a sign in.
+            </p>
+            <div id="link-client-id-badge" style="display: none; margin-top: -8px; margin-bottom: 14px; text-align: center;">
+                <span style="font-family: monospace; font-size: 0.74rem; color: #fca5a5; background: rgba(0, 0, 0, 0.4); border: 1px solid rgba(239, 68, 68, 0.3); padding: 2px 8px; border-radius: 6px;">
+                    ID: <span id="link-client-id-text"></span>
+                </span>
+            </div>
+
+            <!-- Permissions Box -->
+            <div id="sso-permissions-container">
+                <div class="permissions-box">
+                    <div class="permissions-title">Permissions Requested</div>
+                    <div class="permission-item">
+                        <span class="perm-icon">✓</span>
+                        <span id="perm-name-item">Access your CrimsonFlame display name & avatar</span>
+                    </div>
+                    <div class="permission-item" id="perm-email-container">
+                        <span class="perm-icon">✓</span>
+                        <span>View your verified email address</span>
+                    </div>
+                    <div class="permission-item">
+                        <span class="perm-icon">✓</span>
+                        <span>Authenticate your genuine identity via CrimX</span>
+                    </div>
+                </div>
+
+                <div class="permissions-box" style="border-color: rgba(239, 68, 68, 0.2);">
+                    <div class="permissions-title" style="color: #f87171;">This application will NOT be able to</div>
+                    <div class="permission-item">
+                        <span style="color: #f87171; font-size: 0.9rem;">✕</span>
+                        <span>Access or change your password or security settings</span>
+                    </div>
+                    <div class="permission-item">
+                        <span style="color: #f87171; font-size: 0.9rem;">✕</span>
+                        <span>Access payment methods or private direct messages</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sign-in prompt (shown when not logged in) -->
+            <div id="auth-needed" style="margin-bottom: 18px;">
+                <p style="color: var(--text-muted); font-size: 0.86rem; margin-bottom: 12px;">Sign into CrimX to continue:</p>
+                
+                <form id="link-email-form" onsubmit="window.handleLinkEmailSignIn(event)" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 14px;">
+                    <input type="text" id="link-login-ident" placeholder="Email or Username" required style="width: 100%; box-sizing: border-box; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 0.88rem; outline: none;">
+                    <input type="password" id="link-login-pass" placeholder="Password" required style="width: 100%; box-sizing: border-box; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); border-radius: 10px; padding: 10px 14px; color: #fff; font-size: 0.88rem; outline: none;">
+                    <div id="link-login-error" style="display: none; color: #f87171; font-size: 0.8rem; padding: 2px 4px;"></div>
+                    <button type="submit" id="link-email-btn" style="background: var(--crimson); color: #fff; border: none; padding: 10px; border-radius: 10px; font-weight: 700; font-size: 0.9rem; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 14px rgba(217, 4, 41, 0.35);">
+                        Sign In with CrimX ID
+                    </button>
+                </form>
+
+                <div style="display: flex; align-items: center; gap: 8px; margin: 10px 0; color: var(--text-muted); font-size: 0.75rem;">
+                    <div style="flex: 1; height: 1px; background: var(--glass-border);"></div>
+                    <span>OR</span>
+                    <div style="flex: 1; height: 1px; background: var(--glass-border);"></div>
+                </div>
+
+                <button type="button" onclick="window.signInWithGoogle()" class="btn-google">
+                    <img src="https://cdn-icons-png.flaticon.com/512/300/300221.png" style="width: 18px; height: 18px;" alt="Google"> Sign in with Google
+                </button>
+            </div>
+
+            <!-- Signed-in profile (shown when logged in) -->
+            <div id="user-profile-bar" style="display: none; margin-bottom: 18px;">
+                <div class="profile-bar">
+                    <div class="profile-info">
+                        <img id="link-user-pfp" src="" style="width: 34px; height: 34px; border-radius: 50%; object-fit: cover;">
+                        <div>
+                            <div id="link-user-name" style="font-weight: 700; font-size: 0.88rem; color: #4ade80;"></div>
+                            <div id="link-user-email" style="font-size: 0.76rem; color: var(--text-muted);"></div>
+                        </div>
+                    </div>
+                    <button onclick="window.switchAccount()" style="background: transparent; border: none; color: var(--text-muted); font-size: 0.75rem; text-decoration: underline; cursor: pointer;">Switch</button>
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons" id="action-buttons-container">
+                <button onclick="window.cancelLinking()" class="btn-cancel" id="btn-cancel-auth">Cancel</button>
+                <button id="authorize-btn" onclick="window.authorizeLinking()" class="btn-authorize" disabled>
+                    Sign in first
+                </button>
+            </div>
+
+            <div id="success-message" class="success-banner">
+                ✓ Access Granted! Redirecting to application...
+            </div>
+        </div>
+    </main>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, updateDoc, increment, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyBSSJKDrFJ1_qlliZqgw34CY2TSaKOxxxM",
+            authDomain: "crimsonflame-8169e.firebaseapp.com",
+            projectId: "crimsonflame-8169e",
+            storageBucket: "crimsonflame-8169e.firebasestorage.app",
+            messagingSenderId: "406321213530",
+            appId: "1:406321213530:web:92d27a69d34d147393a863"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const googleProvider = new GoogleAuthProvider();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        
+        // Authorization Request Parameters
+        const clientId = urlParams.get('client_id') || urlParams.get('linkkey') || urlParams.get('key');
+        let redirectUri = urlParams.get('redirect_uri') || urlParams.get('redirect') || null;
+        const responseType = urlParams.get('response_type') || 'code';
+        const scope = urlParams.get('scope') || 'profile email';
+        const state = urlParams.get('state') || '';
+        const codeChallenge = urlParams.get('code_challenge') || null;
+        const codeChallengeMethod = urlParams.get('code_challenge_method') || 'S256';
+
+        const serviceNameParam = urlParams.get('service') || null;
+
+        let appData = null;
+        let isDataReady = false;
+        let isAuthReady = false;
+        let currentUser = null;
+        const DEFAULT_PFP = "https://cdn-icons-png.flaticon.com/512/149/149071.png";
+
+        function revealCard() {
+            const loader = document.getElementById('page-loader');
+            const linkCard = document.querySelector('.link-card');
+            if (loader) {
+                loader.classList.add('fade-out');
+                setTimeout(() => loader.style.display = 'none', 300);
+            }
+            if (linkCard) {
+                linkCard.style.opacity = '1';
+                linkCard.style.transform = 'scale(1)';
+            }
+        }
+
+        function checkAndReveal() {
+            if (isDataReady && isAuthReady) {
+                setTimeout(revealCard, 150);
+            }
+        }
+
+        function showGatekeeperHalt(title, message) {
+            const alertBox = document.getElementById('gatekeeper-alert');
+            const titleEl = document.getElementById('gatekeeper-title');
+            const msgEl = document.getElementById('gatekeeper-msg');
+            const authBtn = document.getElementById('authorize-btn');
+            
+            if (titleEl) titleEl.textContent = title;
+            if (msgEl) msgEl.textContent = message;
+            if (alertBox) alertBox.style.display = 'block';
+
+            if (authBtn) {
+                authBtn.disabled = true;
+                authBtn.style.opacity = '0.3';
+                authBtn.textContent = 'Authorization Blocked';
+            }
+
+            document.getElementById('sso-permissions-container').style.opacity = '0.4';
+            isDataReady = true;
+            checkAndReveal();
+        }
+
+        // Scope display configuration
+        if (!scope.includes('email')) {
+            const emailPerm = document.getElementById('perm-email-container');
+            if (emailPerm) emailPerm.style.display = 'none';
+        }
+
+        // 1. GATEKEEPER CHECK: Validate Client ID & Redirect URI
+        async function runGatekeeperChecks() {
+            if (!clientId) {
+                if (serviceNameParam && redirectUri) {
+                    // Legacy quicklink fallback
+                    document.getElementById('service-name-text').textContent = serviceNameParam;
+                    document.getElementById('link-header-title').textContent = `Authorize ${serviceNameParam}`;
+                    isDataReady = true;
+                    checkAndReveal();
+                    return;
+                }
+                showGatekeeperHalt("Missing Client ID", "No client_id was specified in this authorization request. Please launch login through a registered application.");
+                return;
+            }
+
+            try {
+                // Fetch client registration from Firestore
+                const docSnap = await getDoc(doc(db, "sso_links", clientId));
+                if (!docSnap.exists()) {
+                    if (clientId === 'cf_client_843fbbf7d0caba' || clientId.toLowerCase().includes('pluh') || serviceNameParam) {
+                        appData = {
+                            appName: serviceNameParam || (clientId.toLowerCase().includes('pluh') || clientId === 'cf_client_843fbbf7d0caba' ? 'PluhMath' : 'External Application'),
+                            clientId: clientId
+                        };
+                    } else {
+                        showGatekeeperHalt("Unknown Application", `The client ID "${clientId}" is not registered in CrimX.`);
+                        return;
+                    }
+                } else {
+                    appData = docSnap.data();
+                }
+
+                // Populate UI with registered App info (Real name, not raw client ID)
+                let appName = (appData && appData.appName) || serviceNameParam || '';
+                if (!appName || appName.startsWith('cf_client') || appName.startsWith('crimx_client')) {
+                    if (clientId.toLowerCase().includes('pluh') || clientId === 'cf_client_843fbbf7d0caba') {
+                        appName = 'PluhMath';
+                    } else {
+                        appName = 'External Application';
+                    }
+                }
+                document.getElementById('service-name-text').textContent = appName;
+                document.getElementById('link-header-title').textContent = `Authorize ${appName}`;
+
+                const idBadge = document.getElementById('link-client-id-badge');
+                const idText = document.getElementById('link-client-id-text');
+                if (idBadge && idText && clientId) {
+                    idText.textContent = clientId;
+                    idBadge.style.display = 'block';
+                }
+
+                if (appData.appLogo) {
+                    const logoEl = document.getElementById('service-logo');
+                    if (logoEl) logoEl.src = appData.appLogo;
+                }
+
+                // Strictly validate redirect_uri against whitelist
+                const allowedUris = [];
+                if (appData.redirectUrl) allowedUris.push(appData.redirectUrl.trim());
+                if (Array.isArray(appData.redirectUris)) {
+                    appData.redirectUris.forEach(u => allowedUris.push(u.trim()));
+                }
+
+                if (!redirectUri && allowedUris.length > 0) {
+                    redirectUri = allowedUris[0];
+                } else if (redirectUri && allowedUris.length > 0) {
+                    // Strict origin/prefix whitelist match to prevent open redirect vulnerabilities
+                    const isWhitelisted = allowedUris.some(allowed => {
+                        try {
+                            const allowedUrl = new URL(allowed);
+                            const targetUrl = new URL(redirectUri);
+                            return allowedUrl.origin === targetUrl.origin && targetUrl.pathname.startsWith(allowedUrl.pathname.replace(/\/+$/, ''));
+                        } catch(e) {
+                            return allowed === redirectUri;
+                        }
+                    });
+
+                    if (!isWhitelisted) {
+                        showGatekeeperHalt("Untrusted Redirect URI", `The redirect URI "${redirectUri}" is not whitelisted for this application. Open redirects are blocked by CrimX.`);
+                        return;
+                    }
+                }
+
+                isDataReady = true;
+                checkAndReveal();
+            } catch(err) {
+                console.error("Gatekeeper error:", err);
+                showGatekeeperHalt("Gatekeeper Error", "Failed to verify application credentials. Please try again later.");
+            }
+        }
+
+        // Run Gatekeeper
+        runGatekeeperChecks();
+
+        // 2. AUTH STATE LISTENER
+        onAuthStateChanged(auth, user => {
+            const authNeeded = document.getElementById('auth-needed');
+            const profileBar = document.getElementById('user-profile-bar');
+            const btn = document.getElementById('authorize-btn');
+
+            if (user) {
+                currentUser = user;
+                const name = user.displayName || user.email.split('@')[0];
+
+                if (authNeeded) authNeeded.style.display = 'none';
+                if (profileBar) {
+                    profileBar.style.display = 'flex';
+                    document.getElementById('link-user-pfp').src = user.photoURL || DEFAULT_PFP;
+                    document.getElementById('link-user-name').textContent = '✓ ' + name;
+                    document.getElementById('link-user-email').textContent = user.email;
+                }
+
+                if (btn && !document.getElementById('gatekeeper-alert').style.display.includes('block')) {
+                    btn.textContent = `Authorize as ${name}`;
+                    btn.disabled = false;
+                    btn.style.opacity = '1';
+                }
+            } else {
+                currentUser = null;
+                if (authNeeded) authNeeded.style.display = 'block';
+                if (profileBar) profileBar.style.display = 'none';
+                if (btn) {
+                    btn.textContent = 'Sign in first';
+                    btn.disabled = true;
+                    btn.style.opacity = '0.5';
+                }
+            }
+            isAuthReady = true;
+            checkAndReveal();
+        });
+
+        window.handleLinkEmailSignIn = async function(e) {
+            e.preventDefault();
+            const ident = document.getElementById('link-login-ident').value.trim();
+            const pass = document.getElementById('link-login-pass').value;
+            const errEl = document.getElementById('link-login-error');
+            const btn = document.getElementById('link-email-btn');
+
+            if (errEl) { errEl.style.display = 'none'; errEl.textContent = ''; }
+            if (btn) { btn.disabled = true; btn.textContent = 'Signing in...'; }
+
+            try {
+                let email = ident;
+                if (!ident.includes('@')) {
+                    const q = query(collection(db, "users"), where("username", "==", ident.toLowerCase()));
+                    const snap = await getDocs(q);
+                    if (!snap.empty) {
+                        const uData = snap.docs[0].data();
+                        if (uData.email) email = uData.email;
+                    }
+                }
+
+                await signInWithEmailAndPassword(auth, email, pass);
+            } catch (err) {
+                console.error("Link email sign-in error:", err);
+                if (errEl) {
+                    errEl.style.display = 'block';
+                    if (err.code === 'auth/wrong-password' || err.code === 'auth/invalid-credential') {
+                        errEl.textContent = 'Incorrect email or password.';
+                    } else if (err.code === 'auth/user-not-found') {
+                        errEl.textContent = 'No account found with this CrimX ID.';
+                    } else {
+                        errEl.textContent = err.message || 'Failed to sign in.';
+                    }
+                }
+            } finally {
+                if (btn) { btn.disabled = false; btn.textContent = 'Sign In with CrimX ID'; }
+            }
+        };
+
+        window.signInWithGoogle = async function() {
+            try {
+                await signInWithPopup(auth, googleProvider);
+            } catch(err) {
+                window.showCustomAlert("Sign-in failed: " + err.message);
+            }
+        };
+
+        window.switchAccount = async function() {
+            await signOut(auth);
+            window.signInWithGoogle();
+        };
+
+        // 3. CANCEL LINKING (Error Branch)
+        window.cancelLinking = function() {
+            if (redirectUri) {
+                // Return standard error response so in-game/app client can throw native error
+                const delimiter = redirectUri.includes('?') ? '&' : '?';
+                let errUrl = `${redirectUri}${delimiter}error=access_denied&error_description=User+cancelled+authorization`;
+                if (state) errUrl += `&state=${encodeURIComponent(state)}`;
+                window.location.href = errUrl;
+            } else {
+                window.location.href = '/index.html';
+            }
+        };
+
+        // 4. AUTHORIZE LINKING (Code Minting)
+        window.authorizeLinking = async function() {
+            if (!currentUser) return;
+            const btn = document.getElementById('authorize-btn');
+            btn.disabled = true;
+            btn.textContent = "Authorizing...";
+
+            try {
+                // Generate secure random 1-time authorization code
+                const randBytes = new Uint8Array(20);
+                crypto.getRandomValues(randBytes);
+                const codeHex = Array.from(randBytes, b => ('0' + b.toString(16)).slice(-2)).join('');
+                const authCode = `crimx_code_${codeHex}`;
+
+                // Calculate 5-minute TTL
+                const expiresAt = new Date(Date.now() + 5 * 60 * 1000).toISOString();
+
+                // Save code to Firestore crimx_codes collection
+                const codeDoc = {
+                    code: authCode,
+                    clientId: clientId || "legacy_app",
+                    redirectUri: redirectUri || "",
+                    userId: currentUser.uid,
+                    userName: currentUser.displayName || currentUser.email.split('@')[0],
+                    userEmail: scope.includes('email') ? currentUser.email : "",
+                    userPfp: currentUser.photoURL || DEFAULT_PFP,
+                    scope: scope,
+                    state: state,
+                    codeChallenge: codeChallenge || null,
+                    codeChallengeMethod: codeChallengeMethod || null,
+                    used: false,
+                    createdAt: new Date().toISOString(),
+                    expiresAt: expiresAt
+                };
+
+                await setDoc(doc(db, "crimx_codes", authCode), codeDoc);
+
+                // Record application connection in users/{uid}/connected_apps
+                const appRecordId = clientId || (serviceNameParam ? serviceNameParam.toLowerCase().replace(/[^a-z0-9]/g, '_') : 'app_unknown');
+                let displayAppName = (appData && appData.appName) || serviceNameParam || "";
+                if (!displayAppName || displayAppName.startsWith('cf_client') || displayAppName.startsWith('crimx_client')) {
+                    if (clientId && (clientId.toLowerCase().includes('pluh') || clientId === 'cf_client_843fbbf7d0caba')) {
+                        displayAppName = 'PluhMath';
+                    } else {
+                        displayAppName = 'External Application';
+                    }
+                }
+                const displayLogo = (appData && appData.appLogo) || DEFAULT_PFP;
+
+                await setDoc(doc(db, "users", currentUser.uid, "connected_apps", appRecordId), {
+                    clientId: clientId || null,
+                    appName: displayAppName,
+                    name: displayAppName,
+                    appLogo: displayLogo,
+                    authorizedAt: new Date().toISOString(),
+                    scope: scope
+                }, { merge: true });
+
+                // Update analytics on app document
+                if (clientId && appData) {
+                    const appRef = doc(db, "sso_links", clientId);
+                    const userMap = appData.authorizedUserUids || {};
+                    userMap[currentUser.uid] = true;
+                    updateDoc(appRef, {
+                        totalAuthorizations: increment(1),
+                        lastAuthorizedAt: new Date().toISOString(),
+                        authorizedUserUids: userMap
+                    }).catch(e => console.warn(e));
+                }
+
+                // Visual Success
+                document.getElementById('success-message').style.display = 'block';
+                btn.textContent = "✓ Authorized!";
+
+                setTimeout(() => {
+                    if (window.opener) {
+                        window.opener.postMessage({
+                            type: 'CRIMX_AUTH_SUCCESS',
+                            code: authCode,
+                            user: {
+                                uid: currentUser.uid,
+                                username: currentUser.displayName || currentUser.email.split('@')[0],
+                                displayName: currentUser.displayName || 'CrimX Player',
+                                email: currentUser.email || '',
+                                photoURL: currentUser.photoURL || DEFAULT_PFP
+                            }
+                        }, '*');
+                        setTimeout(() => window.close(), 400);
+                        return;
+                    }
+
+                    if (redirectUri) {
+                        // Standard Authorization Code callback (ZERO personal data in URL!)
+                        const delimiter = redirectUri.includes('?') ? '&' : '?';
+                        let target = `${redirectUri}${delimiter}code=${authCode}`;
+                        if (state) target += `&state=${encodeURIComponent(state)}`;
+                        window.location.href = target;
+                    } else {
+                        window.showCustomAlert("Authorization successful! Code: " + authCode);
+                    }
+                }, 1000);
+
+            } catch(err) {
+                console.error("Authorization error:", err);
+                window.showCustomAlert("Failed to authorize application: " + err.message);
+                btn.disabled = false;
+                btn.textContent = "Try Again";
+            }
+        };
+    </script>
+</body>
+</html>
