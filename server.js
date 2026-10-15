@@ -512,6 +512,10 @@ app.get('/privacy', (req, res) => {
   res.sendFile(path.join(__dirname, 'privacy', 'index.html'));
 });
 
+app.get(['/pages', '/pages/*'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'pages', 'index.html'));
+});
+
 // ─── API: CIM REALTIME IN-MEMORY RELAY & FIREBASE MESSAGING ───
 // Kept in RAM only: 0 database storage, zero cloud leaks!
 const activeCIMClients = new Map();       // recipientUid -> Set of SSE client responses
